@@ -23,8 +23,10 @@
 #include "TFile.h"
 
 
+//header in the ToolSet
 #include "CMC.h"
 #include "CChain.h"
+
 class TFile;
 class TTree;
 
@@ -49,11 +51,15 @@ class Minimal_Processor : public Processor {
 	protected:
 
 		// input 
-		std::string _inputPFOsCollection;
+		std::string _inputPOsCollection;
+		std::string _inputMCsCollection;
 		std::string _rootfilename;
+		std::string _mcpoRelation;
 
 		// parameter 
-		LCCollection* _pfoCol;
+		LCCollection* _poCol;
+		LCCollection* _mcCol;
+		LCRelationNavigator* _navpo;
 		int  _nEvt; 
 		int _nRun;
 
@@ -62,14 +68,21 @@ class Minimal_Processor : public Processor {
 		TTree* _datatrain;
 
 
+		//function
 
 		/** Calculates the cone energy */
-		int GetJetInformation( ReconstructedParticle* pfo, Information info ) ;
+		bool analyseMCParticle( LCCollection* MCs_col , Information &info) ;
+		bool analysePOParticle( LCCollection* POs_col, Information &info);
+
+
+		int GetFSInformation( ReconstructedParticle* po, Variable& var) ;
 		void makeNTuple();
 
 	public:
-		Counter      po_counter;
-		Information  po_info;
+		Counter      _mc_counter;
+		Counter      _po_counter;
+		Information  _mc_info;
+		Information  _po_info;
 
 } ;
 

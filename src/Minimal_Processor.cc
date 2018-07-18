@@ -1,23 +1,5 @@
 #include "Minimal_Processor.h"
 
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <utility>
-#include <cmath>
-
-#include <EVENT/LCCollection.h>
-#include <EVENT/MCParticle.h>
-#include <IMPL/LCCollectionVec.h>
-
-// ----- include for verbosity dependend logging ---------
-#include <marlin/VerbosityLevels.h>
-
-#include <TMath.h>
-#include <TVector3.h>
-#include <TLorentzVector.h>
-
-
 Minimal_Processor aMinimal_Processor ;
 
 Minimal_Processor::Minimal_Processor()
@@ -27,11 +9,25 @@ Minimal_Processor::Minimal_Processor()
 		_description = "Isolated Photon Finder Processor" ;
 
 		// register steering parameters: name, description, class-variable, default value
+		registerInputCollection( LCIO::MCPARTICLE,
+				"MCParticleCollection", 
+				"Name of the MC particle collection",
+				_inputMCsCollection,
+				std::string("MCParticlesSkimmed") );
+
+
 		registerInputCollection( LCIO::RECONSTRUCTEDPARTICLE,
 				"InputCollection" ,
 				"Input collection of ReconstructedParticles",
-				_inputPFOsCollection,
+				_inputPOsCollection,
 				std::string("PandoraPFOs"));
+
+    registerInputCollection( LCIO::LCRELATION,
+    		"InputMyRecoMCTruthLinkName",
+    		"Relation between MC and PFO particles",
+    		_mcpoRelation,
+    		std::string("RecoMCTruthLink"));
+
 
 		registerProcessorParameter( "RootFileName",
 				"Name of Root file (default: output.root)",
@@ -57,22 +53,41 @@ void Minimal_Processor::processEvent( LCEvent * evt ) {
 	//init
 	_nEvt ++;
 	if( _nEvt % 50 == 0 ) std::cout << "processing event "<< _nEvt << std::endl;
-    memset( &po_info,    0, sizeof(po_info) );
-    po_info.init();
-    po_counter.init();
+    memset( &_mc_info,    0, sizeof(_mc_info) );
+    memset( &_po_info,    0, sizeof(_po_info) );
+    _mc_info.init();
+    _po_info.init();
+    _mc_counter.init();
+    _po_counter.init();
 
 
 
 	// PFO loop
-	_pfoCol = evt->getCollection( _inputPFOsCollection ) ;
-	int npfo = _pfoCol->getNumberOfElements();
+    _mcCol = evt->getCollection( _inputMCsCollection  ) ;
+	_poCol = evt->getCollection( _inputPOsCollection ) ;
+    _navpo = new LCRelationNavigator( evt->getCollection( _mcpoRelation ) );
 
-	po_counter.evt++;
-	for (int i = 0; i < npfo; i++ ) {
-		ReconstructedParticle* pfo = dynamic_cast<ReconstructedParticle*>( _pfoCol->getElementAt(i) );
 
-		int output_iso =  GetJetInformation( pfo , po_info);
-	}
+    bool JMC,JPO;
+
+    JMC =analyseMCParticle(_poCol, _mc_info);
+    if(JMC){
+    	_mc_counter.pass_all++;
+    }
+    else{
+		ToolSet::ShowMessage(1,"in processEvent: not pass analyseMCParticle ");
+    }
+
+
+
+    JPO=analysePOParticle(_poCol, _po_info);
+
+    if(JPO){
+    	_po_counter.pass_all++;
+    }
+    else{
+		ToolSet::ShowMessage(1,1,"in processEvent: not pass analyseMCParticle ");
+    }
 
 
     _datatrain->Fill();
@@ -103,7 +118,8 @@ void Minimal_Processor::makeNTuple() {
 	_otfile = new TFile( _rootfilename.c_str() , "RECREATE" );
 
 	//Define root tree
-	po_info.data_jet.Fill_Data(_datatrain,"jet");
+	_mc_info.data_jet.Fill_Data(_datatrain,"mc_jet");
+	_po_info.data_jet.Fill_Data(_datatrain,"po_jet");
 	return;
 
 }
@@ -114,28 +130,6 @@ void Minimal_Processor::makeNTuple() {
 
 
 
-
-
-
-
-int Minimal_Processor::GetJetInformation( ReconstructedParticle* pfo, Information info ) {
-	// energy
-	float ecale = pfo->getEnergy();
-	// 3-momentum 
-	float p     = TVector3( pfo->getMomentum() ).Mag();
-	// costheta 
-	float angle_costheta = abs(TVector3( pfo->getMomentum() ).CosTheta());
-	// costheta 
-	float angle_phi = abs(TVector3( pfo->getMomentum() ).Phi());
-
-	info.data_jet.e = ecale;
-	info.data_jet.p = p;
-	info.data_jet.costheta = angle_costheta;
-	info.data_jet.phi= angle_phi;
-
-	// 
-	return 0;
-}
 
 
 

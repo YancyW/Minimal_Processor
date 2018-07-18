@@ -22,15 +22,17 @@ class Variable{
 		//************************
 		//inserted by process file
 		//************************
-		float p                   ;        
+		float higgs_channel        ;        
+		float p                    ;        
 		float costheta             ;        
 		float phi                  ;        
 		float e                    ;        
 		void init(){
-		    p               =-10.1;        
-		    costheta         =-10.1;        
-		    phi              =-10.1;        
-		    e                =-10.1;        
+		    higgs_channel    =-10000.1;        
+		    p                =-10000.1;        
+		    costheta         =-10000.1;        
+		    phi              =-10000.1;        
+		    e                =-10000.1;        
 		}
 
 		void Fill_Data(TTree* tree, std::string prefix);
