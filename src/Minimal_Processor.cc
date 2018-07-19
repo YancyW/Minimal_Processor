@@ -10,24 +10,22 @@ Minimal_Processor::Minimal_Processor()
 
 		// register steering parameters: name, description, class-variable, default value
 		registerInputCollection( LCIO::MCPARTICLE,
-				"MCParticleCollection", 
+				"InputMCParticleCollection", 
 				"Name of the MC particle collection",
 				_inputMCsCollection,
 				std::string("MCParticlesSkimmed") );
 
-
 		registerInputCollection( LCIO::RECONSTRUCTEDPARTICLE,
-				"InputCollection" ,
+				"InputPOParticleCollection" ,
 				"Input collection of ReconstructedParticles",
 				_inputPOsCollection,
 				std::string("PandoraPFOs"));
 
-    registerInputCollection( LCIO::LCRELATION,
-    		"InputMyRecoMCTruthLinkName",
-    		"Relation between MC and PFO particles",
-    		_mcpoRelation,
-    		std::string("RecoMCTruthLink"));
-
+	    registerInputCollection( LCIO::LCRELATION,
+	    		"InputRecoMCTruthLink",
+	    		"Relation between MC and PFO particles",
+	    		_mcpoRelation,
+	    		std::string("RecoMCTruthLink"));
 
 		registerProcessorParameter( "RootFileName",
 				"Name of Root file (default: output.root)",
@@ -39,13 +37,20 @@ Minimal_Processor::Minimal_Processor()
 
 void Minimal_Processor::init() { 
 	std::cout << "   init Minimal_Processor " << std::endl ;
+	std::cout << "the output root file is " << _rootfilename << std::endl; 
+
+	// usually a good idea to
+	printParameters();
+
+	// make Ntuple
 	makeNTuple();
+
 	_nRun = 0;
 	_nEvt = 0;
-	printParameters() ;
 }
 
 void Minimal_Processor::processRunHeader( LCRunHeader* run) { 
+	_nRun++;
 } 
 
 void Minimal_Processor::processEvent( LCEvent * evt ) { 
@@ -55,6 +60,8 @@ void Minimal_Processor::processEvent( LCEvent * evt ) {
 	if( _nEvt % 50 == 0 ) std::cout << "processing event "<< _nEvt << std::endl;
     memset( &_mc_info,    0, sizeof(_mc_info) );
     memset( &_po_info,    0, sizeof(_po_info) );
+    memset( &_po_counter, 0, sizeof(_po_counter) );
+    memset( &_mc_counter, 0, sizeof(_mc_counter) );
     _mc_info.init();
     _po_info.init();
     _mc_counter.init();
@@ -70,7 +77,7 @@ void Minimal_Processor::processEvent( LCEvent * evt ) {
 
     bool JMC,JPO;
 
-    JMC =analyseMCParticle(_poCol, _mc_info);
+    JMC =analyseMCParticle(_mcCol, _mc_info);
     if(JMC){
     	_mc_counter.pass_all++;
     }
@@ -86,11 +93,14 @@ void Minimal_Processor::processEvent( LCEvent * evt ) {
     	_po_counter.pass_all++;
     }
     else{
-		ToolSet::ShowMessage(1,1,"in processEvent: not pass analyseMCParticle ");
+		ToolSet::ShowMessage(1,1,"in processEvent: not pass analysePOParticle ");
     }
 
 
     _datatrain->Fill();
+
+	// delete
+    delete _navpo;
 
 	streamlog_out(DEBUG) << "   processing event: " << evt->getEventNumber() 
 		<< "   in run:  " << evt->getRunNumber() 
@@ -116,6 +126,7 @@ void Minimal_Processor::makeNTuple() {
 	//Output root file
 	std::cout << _rootfilename << std::endl;
 	_otfile = new TFile( _rootfilename.c_str() , "RECREATE" );
+	_datatrain= new TTree( "datatrain" , "events" );
 
 	//Define root tree
 	_mc_info.data_jet.Fill_Data(_datatrain,"mc_jet");

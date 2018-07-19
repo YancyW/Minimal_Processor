@@ -18,14 +18,14 @@
 #include <EVENT/ReconstructedParticle.h>
 #include <EVENT/MCParticle.h>
 #include <UTIL/LCRelationNavigator.h>
-#include "Element_Observable.h"
 #include "TTree.h"
 #include "TFile.h"
 
 
+#include "Minimal_Processor_Element_Observable.h"
 //header in the ToolSet
-#include "CMC.h"
-#include "CChain.h"
+#include "CPrint.h"
+#include "CFormat.h"
 
 class TFile;
 class TTree;
@@ -33,6 +33,7 @@ class TTree;
 using namespace lcio ;
 using namespace marlin ;
 using namespace std;
+using ToolSet::operator<<;
 
 class Minimal_Processor : public Processor {
 
@@ -71,18 +72,18 @@ class Minimal_Processor : public Processor {
 		//function
 
 		/** Calculates the cone energy */
-		bool analyseMCParticle( LCCollection* MCs_col , Information &info) ;
-		bool analysePOParticle( LCCollection* POs_col, Information &info);
+		bool analyseMCParticle( LCCollection* MCs_col, Minimal_Processor_Information &info) ;
+		bool analysePOParticle( LCCollection* POs_col, Minimal_Processor_Information &info);
 
 
-		int GetFSInformation( ReconstructedParticle* po, Variable& var) ;
+		int GetFSInformation( ReconstructedParticle* po, Minimal_Processor_Variable& var) ;
 		void makeNTuple();
 
 	public:
-		Counter      _mc_counter;
-		Counter      _po_counter;
-		Information  _mc_info;
-		Information  _po_info;
+		Minimal_Processor_Counter      _mc_counter;
+		Minimal_Processor_Counter      _po_counter;
+		Minimal_Processor_Information  _mc_info;
+		Minimal_Processor_Information  _po_info;
 
 } ;
 

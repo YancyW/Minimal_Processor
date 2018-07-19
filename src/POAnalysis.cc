@@ -2,7 +2,7 @@
 #include "CRC.h"
 
 
-bool Minimal_Processor::analysePOParticle(LCCollection* PFOs_col,Information &info){
+bool Minimal_Processor::analysePOParticle(LCCollection* PFOs_col, Minimal_Processor_Information &info){
 
 	std::vector<ReconstructedParticle*> pos = ToolSet::CRC::Get_POParticle(PFOs_col);
 
@@ -13,7 +13,7 @@ bool Minimal_Processor::analysePOParticle(LCCollection* PFOs_col,Information &in
 	return(true);
 }
 
-int Minimal_Processor::GetFSInformation( ReconstructedParticle* pfo, Variable &var) {
+int Minimal_Processor::GetFSInformation( ReconstructedParticle* pfo, Minimal_Processor_Variable &var) {
 	// energy
 	float ecale = pfo->getEnergy();
 	// 3-momentum 
