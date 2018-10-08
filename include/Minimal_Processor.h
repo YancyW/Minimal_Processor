@@ -56,11 +56,13 @@ class Minimal_Processor : public Processor {
 		std::string _inputMCsCollection;
 		std::string _rootfilename;
 		std::string _mcpoRelation;
+		std::string _mctrkRelation;
 
 		// parameter 
 		LCCollection* _poCol;
 		LCCollection* _mcCol;
 		LCRelationNavigator* _navpo;
+		LCRelationNavigator* _navTrkFromMC;
 		int  _nEvt; 
 		int _nRun;
 
@@ -78,6 +80,9 @@ class Minimal_Processor : public Processor {
 
 		int GetFSInformation( ReconstructedParticle* po, Minimal_Processor_Variable& var) ;
 		void makeNTuple();
+		void TrackGetSource(std::vector<ReconstructedParticle*> &source, std::vector<std::vector<MCParticle*> >  &to, LCRelationNavigator* &relation);
+		void TrackGetSource(std::vector<Track*> &source, std::vector<std::vector<MCParticle*> >  &to, LCRelationNavigator* &relation);
+		void TrackGetObject(std::vector<MCParticle*> &source, std::vector<std::vector<ReconstructedParticle*> >  &to, LCRelationNavigator* &relation);
 
 	public:
 		Minimal_Processor_Counter      _mc_counter;

@@ -25,7 +25,7 @@ Minimal_Processor::Minimal_Processor()
 	    		"InputRecoMCTruthLink",
 	    		"Relation between MC and PFO particles",
 	    		_mcpoRelation,
-	    		std::string("RecoMCTruthLink"));
+	    		std::string("MCTruthMarlinTrkTracksLink"));
 
 		registerProcessorParameter( "RootFileName",
 				"Name of Root file (default: output.root)",

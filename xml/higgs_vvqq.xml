@@ -1,6 +1,6 @@
 <marlin>
 	<execute>
-		<processor name="MyJetFinderProcessor"/>
+		<processor name="MyMinimalProcessor"/>
 	</execute>
 
 	<global>
@@ -16,7 +16,7 @@
 	</global>
 
 
-	<processor name="MyJetFinderProcessor" type="JetFinder">
+	<processor name="MyMinimalProcessor" type="Minimal_Processor">
 		<!--Input collection of MCParticles-->
 		<parameter name="InputMCParticleCollection" type="string" lcioInType="MCParticles">MCParticlesSkimmed</parameter>
 		<!--Input collection of ReconstructedParticles-->
