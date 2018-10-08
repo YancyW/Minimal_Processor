@@ -104,7 +104,6 @@ echo "checking the source files."
 
 if [ -d "src"  ] ; then
 	echo "Already have  --src-- filter with the source file"
-	echo 
 else
 	echo "no source filter, mkdir new src filter"
 	mkdir src 
@@ -134,6 +133,8 @@ if [[ $# == 2 ]] ; then
 	else 
 		echo "the old class name does not equal to the old folder name, or default MyProcessor, please  change the name yourself."
 	fi
+	echo "change name for new source file" 
+	rename "$old_processor" $new_processor *.cc
 	cd ..
 fi
 
@@ -170,6 +171,8 @@ if [[ $# == 2 ]] ; then
 	else 
 		echo "the old class name does not equal to the old folder name, or default MyProcessor, please  change the name yourself."
 	fi
+	echo "change name for new source file" 
+	rename "$old_processor" $new_processor  *.h
 	cd ..
 fi
 
@@ -221,7 +224,9 @@ else
 	mkdir bin 
 fi
 
-cp action.sh ./bin/
+if [ -a action.sh ];then
+	cp action.sh ./bin/
+fi
 
 
 cd ./build
