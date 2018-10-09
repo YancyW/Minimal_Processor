@@ -9,11 +9,6 @@ bool Minimal_Processor::analysePOParticle(LCCollection* PFOs_col, Minimal_Proces
 	std::vector<std::vector<MCParticle*> > origin_source;
 	TrackGetSource(pos,origin_source, _navpo);
 
-	for (int i=0;i<origin_source.size();i++){
-		ToolSet::ShowMessage(2,"pfo ",pos[i]);
-		ToolSet::ShowMessage(2,"pfo i's mc truth",origin_source[i]);
-	}
-
 	for (int i=0;i<pos.size();i++){
 		int output_iso    =  GetFSInformation( pos[i] , info.data_jet);
 	}

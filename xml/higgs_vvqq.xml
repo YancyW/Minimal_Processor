@@ -1,6 +1,6 @@
 <marlin>
 	<execute>
-		<processor name="MyMinimalProcessor"/>
+		<processor name="My_Minimal_Processor"/>
 	</execute>
 
 	<global>
@@ -16,7 +16,7 @@
 	</global>
 
 
-	<processor name="MyMinimalProcessor" type="Minimal_Processor">
+	<processor name="My_Minimal_Processor" type="Minimal_Processor">
 		<!--Input collection of MCParticles-->
 		<parameter name="InputMCParticleCollection" type="string" lcioInType="MCParticles">MCParticlesSkimmed</parameter>
 		<!--Input collection of ReconstructedParticles-->
@@ -24,7 +24,7 @@
 		<!--Input collection of ReconstructedParticles-->
 		<parameter name="InputRecoMCTruthLink" type="string" lcioInType="LCRELATION">RecoMCTruthLink</parameter>
 		<!--Output root file name-->
-		<parameter name="RootFileName"> /afs/desy.de/user/y/ywang/Code/JetFinder/results/higgs_e2_eL.pR.root </parameter>
+		<parameter name="RootFileName"> $PWD/../results/higgs_e2_eL.pR.root </parameter>
 	</processor>
 
 </marlin>
