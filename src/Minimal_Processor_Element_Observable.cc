@@ -7,3 +7,11 @@ void Minimal_Processor_Variable::Fill_Data(TTree* tree, std::string prefix){
 	tree->Branch( (prefix+"e").c_str()       , &e       ,(prefix+"e").c_str()       );
 }
 
+void Minimal_Processor_Variable_Vec::Fill_Data(TTree* tree, std::string prefix){
+	tree->Branch( (prefix+"higgs_channel_vec").c_str()  , &higgs_channel);
+	tree->Branch( (prefix+"p_vec")            .c_str()  , &p            );
+	tree->Branch( (prefix+"costheta_vec")     .c_str()  , &costheta     );
+	tree->Branch( (prefix+"phi_vec")          .c_str()  , &phi          );
+	tree->Branch( (prefix+"e_vec")            .c_str()  , &e            );
+}
+

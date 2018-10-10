@@ -47,6 +47,7 @@ void Minimal_Processor::init() {
 
 	_nRun = 0;
 	_nEvt = 0;
+	_global_counter.Init();
 }
 
 void Minimal_Processor::processRunHeader( LCRunHeader* run) { 
@@ -62,10 +63,10 @@ void Minimal_Processor::processEvent( LCEvent * evt ) {
     memset( &_po_info,    0, sizeof(_po_info) );
     memset( &_po_counter, 0, sizeof(_po_counter) );
     memset( &_mc_counter, 0, sizeof(_mc_counter) );
-    _mc_info.init();
-    _po_info.init();
-    _mc_counter.init();
-    _po_counter.init();
+    _mc_info.Init();
+    _po_info.Init();
+    _mc_counter.Init();
+    _po_counter.Init();
 
 
 
@@ -77,9 +78,9 @@ void Minimal_Processor::processEvent( LCEvent * evt ) {
 
     bool JMC,JPO;
 
-    JMC =analyseMCParticle(_mcCol, _mc_info);
+    JMC =analyseMCParticle(_mcCol, _mc_info, _mc_counter);
     if(JMC){
-    	_mc_counter.pass_all++;
+    	_global_counter.pass_mc++;
     }
     else{
 		ToolSet::ShowMessage(1,"in processEvent: not pass analyseMCParticle ");
@@ -87,10 +88,9 @@ void Minimal_Processor::processEvent( LCEvent * evt ) {
 
 
 
-    JPO=analysePOParticle(_poCol, _po_info);
-
+    JPO=analysePOParticle(_poCol, _po_info, _po_counter);
     if(JPO){
-    	_po_counter.pass_all++;
+    	_global_counter.pass_po++;
     }
     else{
 		ToolSet::ShowMessage(1,1,"in processEvent: not pass analysePOParticle ");
@@ -99,6 +99,9 @@ void Minimal_Processor::processEvent( LCEvent * evt ) {
 
     _datatrain->Fill();
 
+	if(JMC&&JPO){
+		_global_counter.pass_all++;
+	}
 	// delete
     delete _navpo;
 
@@ -115,6 +118,7 @@ void Minimal_Processor::end() {
 	_otfile->cd();
 	_datatrain->Write();
 	_otfile->Close();
+	_global_counter.Print();
 	std::cout << "Minimal_Processor::end()  " << std::endl;
 }
 

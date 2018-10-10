@@ -74,21 +74,25 @@ class Minimal_Processor : public Processor {
 		//function
 
 		/** Calculates the cone energy */
-		bool analyseMCParticle( LCCollection* MCs_col, Minimal_Processor_Information &info) ;
-		bool analysePOParticle( LCCollection* POs_col, Minimal_Processor_Information &info);
+		bool analyseMCParticle( LCCollection* MCs_col, Minimal_Processor_Information &info, Minimal_Processor_Counter& counter);
+		bool analysePOParticle( LCCollection* POs_col, Minimal_Processor_Information &info, Minimal_Processor_Counter& counter);
 
 
-		int GetFSInformation( ReconstructedParticle* po, Minimal_Processor_Variable& var) ;
+		int Get_MCParticle_Information ( MCParticle* input, Minimal_Processor_Variable& var) ;
+		int Get_MCParticles_Information( std::vector<MCParticle*> input, Minimal_Processor_Variable_Vec& var) ;
+		int Get_POParticle_Information ( ReconstructedParticle* po, Minimal_Processor_Variable& var) ;
+		int Get_POParticles_Information( std::vector<ReconstructedParticle*> po, Minimal_Processor_Variable_Vec& var) ;
 		void makeNTuple();
 		void TrackGetSource(std::vector<ReconstructedParticle*> &source, std::vector<std::vector<MCParticle*> >  &to, LCRelationNavigator* &relation);
 		void TrackGetSource(std::vector<Track*> &source, std::vector<std::vector<MCParticle*> >  &to, LCRelationNavigator* &relation);
 		void TrackGetObject(std::vector<MCParticle*> &source, std::vector<std::vector<ReconstructedParticle*> >  &to, LCRelationNavigator* &relation);
 
 	public:
-		Minimal_Processor_Counter      _mc_counter;
-		Minimal_Processor_Counter      _po_counter;
-		Minimal_Processor_Information  _mc_info;
-		Minimal_Processor_Information  _po_info;
+		Minimal_Processor_Counter              _mc_counter;
+		Minimal_Processor_Counter              _po_counter;
+		Minimal_Processor_Global_Counter       _global_counter;
+		Minimal_Processor_Information          _mc_info;
+		Minimal_Processor_Information          _po_info;
 
 } ;
 

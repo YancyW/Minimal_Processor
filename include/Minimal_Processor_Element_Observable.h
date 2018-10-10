@@ -2,6 +2,29 @@
 #define Minimal_Processor_ELEMENT_DATATYPE_H  
 #include "TTree.h"
 #include <string>
+#include <iostream>
+
+class Minimal_Processor_Global_Counter{
+	public:
+		//***********
+		//event number
+		//***********
+		float evt         ;
+		float pass_mc     ;
+		float pass_po     ;
+		float pass_all    ;
+
+		void Init(){
+			evt           =0;
+			pass_all      =0;
+			pass_mc       =0;
+			pass_po       =0;
+		}
+
+		void Print(){
+			std::cout << "in the Global counter, there are " << pass_mc << "pass MC, and " << pass_po << "pass PO, and " <<pass_all << "pass all criterion." << std::endl; 
+		}
+};
 
 class Minimal_Processor_Counter{
 	public:
@@ -11,7 +34,7 @@ class Minimal_Processor_Counter{
 		float evt         ;
 		float pass_all    ;
 
-		void init(){
+		void Init(){
 			evt           =0;
 			pass_all      =0;
 		}
@@ -29,7 +52,7 @@ class Minimal_Processor_Variable{
 		float phi                  ;        
 		float e                    ;        
 
-		void init(){
+		void Init(){
 		    higgs_channel    =-10000.1;        
 		    p                =-10000.1;        
 		    costheta         =-10000.1;        
@@ -40,17 +63,41 @@ class Minimal_Processor_Variable{
 		void Fill_Data(TTree* tree, std::string prefix);
 };
 
+class Minimal_Processor_Variable_Vec{
+	public:
+		//************************
+		//inserted by process file
+		//************************
+		std::vector<float> higgs_channel        ;        
+		std::vector<float> p                    ;        
+		std::vector<float> costheta             ;        
+		std::vector<float> phi                  ;        
+		std::vector<float> e                    ;        
+
+		void Init(){
+		    higgs_channel    .clear();        
+		    p                .clear();        
+		    costheta         .clear();        
+		    phi              .clear();        
+		    e                .clear();        
+		}
+
+		void Fill_Data(TTree* tree, std::string prefix);
+};
+
 class Minimal_Processor_Information{
 	public:
 		Minimal_Processor_Variable                        data_jet;
+		Minimal_Processor_Variable_Vec                    data_jet_vec;
 
 
 		Minimal_Processor_Information(){
 		}
 
 
-		void init(){
-			data_jet.init();
+		void Init(){
+			data_jet.Init();
+			data_jet_vec.Init();
 		}
 
 
