@@ -11,52 +11,36 @@ bool Minimal_Processor::analyseMCParticle( LCCollection* Allmc,   Minimal_Proces
     std::vector<MCParticle*> hs_higgs     =ToolSet::CMC::Get_MCParticleType(hs_FS,25);
 
     if(hs_higgs.size()>0){
-    	info.data_jet.higgs_channel = ToolSet::CMC::Get_DecayChannel(hs_higgs[0]);
+    	info.data_jet.pdg= ToolSet::CMC::Get_DecayChannel(hs_higgs[0]);
     }
 
 	counter.pass_all++;
-	return(info.data_jet.higgs_channel);
+	return(true);
 }
 
 
 int Minimal_Processor::Get_MCParticle_Information( MCParticle* input, Minimal_Processor_Variable &var) {
-	// energy
-	float ecale = input->getEnergy();
-	// 3-momentum 
-	float p     = TVector3( input->getMomentum() ).Mag();
-	// costheta 
-	float angle_costheta = abs(TVector3( input->getMomentum() ).CosTheta());
-	// costheta 
-	float angle_phi = abs(TVector3( input->getMomentum() ).Phi());
-
-	var.e = ecale;
-	var.p = p;
-	var.costheta = angle_costheta;
-	var.phi= angle_phi;
-
-	// 
+	var.pdg      =input->getPDG();
+	var.p        =ToolSet::CMC::Cal_P(input);
+	var.pt       =ToolSet::CMC::Cal_PT(input);
+	var.costheta =ToolSet::CMC::Cal_CosTheta(input);
+	var.phi      =ToolSet::CMC::Cal_Azimuth(input);
+	var.e        =input->getEnergy();
+	var.mass     =input->getMass();
 	return 0;
 }
 
 
 int Minimal_Processor::Get_MCParticles_Information( std::vector<MCParticle*> input, Minimal_Processor_Variable_Vec &var) {
-	// energy
 	for(unsigned int i=0;i<input.size();i++){
-		float ecale = input[i]->getEnergy();
-		// 3-momentum 
-		float p     = TVector3( input[i]->getMomentum() ).Mag();
-		// costheta 
-		float angle_costheta = abs(TVector3( input[i]->getMomentum() ).CosTheta());
-		// costheta 
-		float angle_phi = abs(TVector3( input[i]->getMomentum() ).Phi());
-		
-		var.e        .push_back(ecale);
-		var.p        .push_back(p);
-		var.costheta .push_back(angle_costheta);
-		var.phi      .push_back(angle_phi);
+		var.pdg      .push_back(input[i]->getPDG());
+		var.p        .push_back(ToolSet::CMC::Cal_P(input[i]));
+		var.pt       .push_back(ToolSet::CMC::Cal_PT(input[i]));
+		var.costheta .push_back(ToolSet::CMC::Cal_CosTheta(input[i]));
+		var.phi      .push_back(ToolSet::CMC::Cal_Azimuth(input[i]));
+		var.e        .push_back(input[i]->getEnergy());
+		var.mass     .push_back(input[i]->getMass());
 	}
-
-	// 
 	return 0;
 }
 

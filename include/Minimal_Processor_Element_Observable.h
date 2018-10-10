@@ -22,7 +22,7 @@ class Minimal_Processor_Global_Counter{
 		}
 
 		void Print(){
-			std::cout << "in the Global counter, there are " << pass_mc << "pass MC, and " << pass_po << "pass PO, and " <<pass_all << "pass all criterion." << std::endl; 
+			std::cout << "in the Global counter, there are " << pass_mc << " pass MC, and " << pass_po << " pass PO, and " <<pass_all << " pass all criterion." << std::endl; 
 		}
 };
 
@@ -46,18 +46,22 @@ class Minimal_Processor_Variable{
 		//************************
 		//inserted by process file
 		//************************
-		float higgs_channel        ;        
+		float pdg                  ;        
 		float p                    ;        
+		float pt                   ;        
 		float costheta             ;        
 		float phi                  ;        
 		float e                    ;        
+		float mass                 ;        
 
 		void Init(){
-		    higgs_channel    =-10000.1;        
+		    pdg              =-10000.1;        
 		    p                =-10000.1;        
+		    pt               =-10000.1;        
 		    costheta         =-10000.1;        
 		    phi              =-10000.1;        
 		    e                =-10000.1;        
+		    mass             =-10000.1;        
 		}
 
 		void Fill_Data(TTree* tree, std::string prefix);
@@ -68,18 +72,22 @@ class Minimal_Processor_Variable_Vec{
 		//************************
 		//inserted by process file
 		//************************
-		std::vector<float> higgs_channel        ;        
+		std::vector<float> pdg                  ;        
 		std::vector<float> p                    ;        
+		std::vector<float> pt                   ;        
 		std::vector<float> costheta             ;        
 		std::vector<float> phi                  ;        
 		std::vector<float> e                    ;        
+		std::vector<float> mass                 ;        
 
 		void Init(){
-		    higgs_channel    .clear();        
+		    pdg              .clear();        
 		    p                .clear();        
+		    pt               .clear();        
 		    costheta         .clear();        
 		    phi              .clear();        
 		    e                .clear();        
+		    mass             .clear();        
 		}
 
 		void Fill_Data(TTree* tree, std::string prefix);
