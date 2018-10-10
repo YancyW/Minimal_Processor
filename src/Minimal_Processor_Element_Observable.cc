@@ -1,4 +1,8 @@
 #include "Minimal_Processor_Element_Observable.h"
+void Minimal_Processor_Observable::Fill_Data(TTree* tree, std::string prefix){
+	tree->Branch( (prefix+"_visible_energy").c_str()     , &visible_energy,(prefix+"_visible_energy").c_str()     );
+}
+
 void Minimal_Processor_Variable::Fill_Data(TTree* tree, std::string prefix){
 	tree->Branch( (prefix+"_pdg").c_str()     , &pdg     ,(prefix+"_pdg").c_str()     );
 	tree->Branch( (prefix+"_p").c_str()       , &p       ,(prefix+"_p").c_str()       );

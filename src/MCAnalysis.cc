@@ -11,7 +11,7 @@ bool Minimal_Processor::analyseMCParticle( LCCollection* Allmc,   Minimal_Proces
     std::vector<MCParticle*> hs_higgs     =ToolSet::CMC::Get_MCParticleType(hs_FS,25);
 
     if(hs_higgs.size()>0){
-    	info.data_jet.pdg= ToolSet::CMC::Get_DecayChannel(hs_higgs[0]);
+    	info.data_variable.pdg= ToolSet::CMC::Get_DecayChannel(hs_higgs[0]);
     }
 
 	counter.pass_all++;

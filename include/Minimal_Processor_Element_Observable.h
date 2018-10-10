@@ -40,6 +40,21 @@ class Minimal_Processor_Counter{
 		}
 };
 
+class Minimal_Processor_Observable{
+	public:
+		//************************
+		//inserted by process file
+		//************************
+		float visible_energy   ;        
+
+		void Init(){
+		    visible_energy =-10000.1;        
+		}
+
+		void Fill_Data(TTree* tree, std::string prefix);
+};
+
+
 //Stored data 
 class Minimal_Processor_Variable{
 	public:
@@ -95,8 +110,9 @@ class Minimal_Processor_Variable_Vec{
 
 class Minimal_Processor_Information{
 	public:
-		Minimal_Processor_Variable                        data_jet;
-		Minimal_Processor_Variable_Vec                    data_jet_vec;
+		Minimal_Processor_Variable                        data_variable;
+		Minimal_Processor_Observable                      data_observable;
+		Minimal_Processor_Variable_Vec                    data_variable_vec;
 
 
 		Minimal_Processor_Information(){
@@ -104,10 +120,17 @@ class Minimal_Processor_Information{
 
 
 		void Init(){
-			data_jet.Init();
-			data_jet_vec.Init();
+			data_variable.Init();
+			data_variable_vec.Init();
+			data_observable.Init();
 		}
 
+
+		void Fill_Data(TTree* tree, std::string prefix){
+			data_observable  .Fill_Data(tree,prefix+"_observable");
+			data_variable    .Fill_Data(tree,prefix+"_variable");
+			data_variable_vec.Fill_Data(tree,prefix+"_variable_vec");
+		}
 
 		~Minimal_Processor_Information(){
 		}

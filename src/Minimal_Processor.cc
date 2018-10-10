@@ -133,8 +133,8 @@ void Minimal_Processor::makeNTuple() {
 	_datatrain= new TTree( "datatrain" , "events" );
 
 	//Define root tree
-	_mc_info.data_jet.Fill_Data(_datatrain,"mc_jet");
-	_po_info.data_jet.Fill_Data(_datatrain,"po_jet");
+	_mc_info.data_variable.Fill_Data(_datatrain,"mc_variable");
+	_po_info.data_variable.Fill_Data(_datatrain,"po_variable");
 	return;
 
 }
