@@ -56,12 +56,13 @@ class Minimal_Processor : public Processor {
 		std::string _inputMCsCollection;
 		std::string _rootfilename;
 		std::string _mcpoRelation;
-		std::string _mctrkRelation;
+		std::string _pomcRelation;
 
 		// parameter 
 		LCCollection* _poCol;
 		LCCollection* _mcCol;
-		LCRelationNavigator* _navpo;
+		LCRelationNavigator* _navpomc;
+		LCRelationNavigator* _navmcpo;
 		LCRelationNavigator* _navTrkFromMC;
 		int  _nEvt; 
 		int _nRun;
@@ -74,8 +75,8 @@ class Minimal_Processor : public Processor {
 		//function
 
 		/** Calculates the cone energy */
-		bool analyseMCParticle( LCCollection* MCs_col, Minimal_Processor_Information &info, Minimal_Processor_Counter& counter);
-		bool analysePOParticle( LCCollection* POs_col, Minimal_Processor_Information &info, Minimal_Processor_Counter& counter);
+		bool analyseMCParticle( LCCollection* MCs_col, LCRelationNavigator* navMCToPFO, Minimal_Processor_Information &info, Minimal_Processor_Counter& counter);
+		bool analysePOParticle( LCCollection* POs_col, LCRelationNavigator* navPFOToMC, Minimal_Processor_Information &info, Minimal_Processor_Counter& counter);
 
 
 		int Get_MCParticle_Information ( MCParticle* input, Minimal_Processor_Variable& var) ;

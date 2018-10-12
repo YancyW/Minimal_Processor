@@ -25,7 +25,13 @@ Minimal_Processor::Minimal_Processor()
 	    		"InputRecoMCTruthLink",
 	    		"Relation between MC and PFO particles",
 	    		_mcpoRelation,
-	    		std::string("MCTruthMarlinTrkTracksLink"));
+	    		std::string("MCTruthRecoLink"));
+
+	    registerInputCollection( LCIO::LCRELATION,
+	    		"InputMCRecoTruthLink",
+	    		"Relation between MC and PFO particles",
+	    		_pomcRelation,
+	    		std::string("RecoMCTruthLink"));
 
 		registerProcessorParameter( "RootFileName",
 				"Name of Root file (default: output.root)",
@@ -73,12 +79,13 @@ void Minimal_Processor::processEvent( LCEvent * evt ) {
 	// PFO loop
     _mcCol = evt->getCollection( _inputMCsCollection  ) ;
 	_poCol = evt->getCollection( _inputPOsCollection ) ;
-    _navpo = new LCRelationNavigator( evt->getCollection( _mcpoRelation ) );
+    _navmcpo = new LCRelationNavigator( evt->getCollection( _mcpoRelation ) );
+    _navpomc = new LCRelationNavigator( evt->getCollection( _pomcRelation ) );
 
 
     bool JMC,JPO;
 
-    JMC =analyseMCParticle(_mcCol, _mc_info, _mc_counter);
+    JMC =analyseMCParticle(_mcCol, _navmcpo, _mc_info, _mc_counter);
     if(JMC){
     	_global_counter.pass_mc++;
     }
@@ -88,7 +95,7 @@ void Minimal_Processor::processEvent( LCEvent * evt ) {
 
 
 
-    JPO=analysePOParticle(_poCol, _po_info, _po_counter);
+    JPO=analysePOParticle(_poCol, _navpomc, _po_info, _po_counter);
     if(JPO){
     	_global_counter.pass_po++;
     }
@@ -103,7 +110,8 @@ void Minimal_Processor::processEvent( LCEvent * evt ) {
 		_global_counter.pass_all++;
 	}
 	// delete
-    delete _navpo;
+    delete _navmcpo;
+    delete _navpomc;
 
 	streamlog_out(DEBUG) << "   processing event: " << evt->getEventNumber() 
 		<< "   in run:  " << evt->getRunNumber() 

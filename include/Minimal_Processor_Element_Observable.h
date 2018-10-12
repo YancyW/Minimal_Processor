@@ -3,7 +3,16 @@
 #include "TTree.h"
 #include <string>
 #include <iostream>
+#include <marlin/Processor.h>
+#include <lcio.h>
+#include <EVENT/ReconstructedParticle.h>
+#include <EVENT/MCParticle.h>
+#include <UTIL/LCRelationNavigator.h>
+#include "CMC.h"
+#include "CRC.h"
 
+using namespace lcio ;
+using namespace marlin ;
 class Minimal_Processor_Global_Counter{
 	public:
 		//***********
@@ -79,6 +88,8 @@ class Minimal_Processor_Variable{
 		    mass             =-10000.1;        
 		}
 
+		void Get_MCParticle_Information( MCParticle* input) ;
+		void Get_POParticle_Information( ReconstructedParticle* input) ;
 		void Fill_Data(TTree* tree, std::string prefix);
 };
 
@@ -105,14 +116,16 @@ class Minimal_Processor_Variable_Vec{
 		    mass             .clear();        
 		}
 
+		void Get_MCParticles_Information( std::vector<MCParticle*> input) ;
+		void Get_POParticles_Information( std::vector<ReconstructedParticle*> input) ;
 		void Fill_Data(TTree* tree, std::string prefix);
 };
 
 class Minimal_Processor_Information{
 	public:
 		Minimal_Processor_Variable                        data_variable;
-		Minimal_Processor_Observable                      data_observable;
 		Minimal_Processor_Variable_Vec                    data_variable_vec;
+		Minimal_Processor_Observable                      data_observable;
 
 
 		Minimal_Processor_Information(){
