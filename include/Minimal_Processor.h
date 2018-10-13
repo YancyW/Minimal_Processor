@@ -9,6 +9,7 @@
 #ifndef Minimal_Processor_h
 #define Minimal_Processor_h 1
 
+#include "Minimal_Processor_Element_Observable.h"
 #include <string>
 #include <map>
 
@@ -16,16 +17,24 @@
 #include <lcio.h>
 
 #include <EVENT/ReconstructedParticle.h>
+#include <EVENT/LCCollection.h>
 #include <EVENT/MCParticle.h>
 #include <UTIL/LCRelationNavigator.h>
+#include <IMPL/LCCollectionVec.h>
+#include <marlin/VerbosityLevels.h>
+
+
 #include "TTree.h"
 #include "TFile.h"
+#include <TMath.h>
+#include <TVector3.h>
+#include <TLorentzVector.h>
 
 
-#include "Minimal_Processor_Element_Observable.h"
 //header in the ToolSet
 #include "CPrint.h"
 #include "CFormat.h"
+#include "CVector.h"
 
 class TFile;
 class TTree;
@@ -54,16 +63,25 @@ class Minimal_Processor : public Processor {
 		// input 
 		std::string _inputPOsCollection;
 		std::string _inputMCsCollection;
-		std::string _rootfilename;
+
 		std::string _mcpoRelation;
 		std::string _pomcRelation;
+		std::string _mctrkRelation;
+		std::string _trkmcRelation;
+
+		std::string _rootfilename;
+
+		bool _output_switch_root;
+		bool _output_switch_collection;
 
 		// parameter 
 		LCCollection* _poCol;
 		LCCollection* _mcCol;
 		LCRelationNavigator* _navpomc;
 		LCRelationNavigator* _navmcpo;
-		LCRelationNavigator* _navTrkFromMC;
+		LCRelationNavigator* _navtrkmc;
+		LCRelationNavigator* _navmctrk;
+
 		int  _nEvt; 
 		int _nRun;
 
@@ -79,19 +97,13 @@ class Minimal_Processor : public Processor {
 		bool analysePOParticle( LCCollection* POs_col, LCRelationNavigator* navPFOToMC, Minimal_Processor_Information &info, Minimal_Processor_Counter& counter);
 
 
-		int Get_MCParticle_Information ( MCParticle* input, Minimal_Processor_Variable& var) ;
-		int Get_MCParticles_Information( std::vector<MCParticle*> input, Minimal_Processor_Variable_Vec& var) ;
-		int Get_POParticle_Information ( ReconstructedParticle* po, Minimal_Processor_Variable& var) ;
-		int Get_POParticles_Information( std::vector<ReconstructedParticle*> po, Minimal_Processor_Variable_Vec& var) ;
 		void makeNTuple();
-		void TrackGetSource(std::vector<ReconstructedParticle*> &source, std::vector<std::vector<MCParticle*> >  &to, LCRelationNavigator* &relation);
-		void TrackGetSource(std::vector<Track*> &source, std::vector<std::vector<MCParticle*> >  &to, LCRelationNavigator* &relation);
-		void TrackGetObject(std::vector<MCParticle*> &source, std::vector<std::vector<ReconstructedParticle*> >  &to, LCRelationNavigator* &relation);
 
 	public:
 		Minimal_Processor_Counter              _mc_counter;
 		Minimal_Processor_Counter              _po_counter;
 		Minimal_Processor_Global_Counter       _global_counter;
+
 		Minimal_Processor_Information          _mc_info;
 		Minimal_Processor_Information          _po_info;
 

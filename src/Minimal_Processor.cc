@@ -33,10 +33,26 @@ Minimal_Processor::Minimal_Processor()
 	    		_pomcRelation,
 	    		std::string("RecoMCTruthLink"));
 
+		registerProcessorParameter( "SwitchOutputRoot",
+				"whether to write a root tree for observables",
+				_output_switch_root,
+				bool(true) );
+
 		registerProcessorParameter( "RootFileName",
 				"Name of Root file (default: output.root)",
 				_rootfilename, 
 				std::string("../result/output.root") );
+
+		registerProcessorParameter( "SwitchOutputCollection",
+				"whether to write a Marlin collection for further Marlin",
+				_output_switch_collection,
+				bool(true) );
+
+		registerOutputCollection( LCIO::RECONSTRUCTEDPARTICLE,
+				"OutputPFOwoOverlayCollection",
+				"The output after removing the overlay",
+				_outputPFOwoOverlayCollection,
+				std::string("PFOwoOverlay") );
 
 	}
 
@@ -49,7 +65,9 @@ void Minimal_Processor::init() {
 	printParameters();
 
 	// make Ntuple
-	makeNTuple();
+	if(_output_switch_root){
+		makeNTuple();
+	}
 
 	_nRun = 0;
 	_nEvt = 0;
@@ -65,15 +83,16 @@ void Minimal_Processor::processEvent( LCEvent * evt ) {
 	//init
 	_nEvt ++;
 	if( _nEvt % 50 == 0 ) std::cout << "processing event "<< _nEvt << std::endl;
-    memset( &_mc_info,    0, sizeof(_mc_info) );
-    memset( &_po_info,    0, sizeof(_po_info) );
-    memset( &_po_counter, 0, sizeof(_po_counter) );
-    memset( &_mc_counter, 0, sizeof(_mc_counter) );
     _mc_info.Init();
     _po_info.Init();
     _mc_counter.Init();
     _po_counter.Init();
 
+
+	if(_output_switch_collection){
+		_otPFOwoOverlay= new LCCollectionVec( LCIO::RECONSTRUCTEDPARTICLE ) ;
+		_otPFOwoOverlay->setSubset(true) ;
+	}
 
 
 	// PFO loop
@@ -103,8 +122,17 @@ void Minimal_Processor::processEvent( LCEvent * evt ) {
 		ToolSet::ShowMessage(1,1,"in processEvent: not pass analysePOParticle ");
     }
 
+	if(_output_switch_collection){
+	// choose a RECONSTRUCTEDPARTICLE vector to write into the collection 
+////	for(unsigned int i=0;i<JetPFOwoOverlay.size();i++){
+////		_otPFOwoOverlay->addElement( JetPFOwoOverlay[i]);
+////	}
+	}
 
-    _datatrain->Fill();
+
+	if(_output_switch_root){
+		_datatrain->Fill();
+	}
 
 	if(JMC&&JPO){
 		_global_counter.pass_all++;
@@ -123,9 +151,11 @@ void Minimal_Processor::check( LCEvent * evt ) {
 }
 
 void Minimal_Processor::end() { 
-	_otfile->cd();
-	_datatrain->Write();
-	_otfile->Close();
+	if(_output_switch_root){
+		_otfile->cd();
+		_datatrain->Write();
+		_otfile->Close();
+	}
 	_global_counter.Print();
 	std::cout << "Minimal_Processor::end()  " << std::endl;
 }
@@ -141,8 +171,8 @@ void Minimal_Processor::makeNTuple() {
 	_datatrain= new TTree( "datatrain" , "events" );
 
 	//Define root tree
-	_mc_info.data_variable.Fill_Data(_datatrain,"mc_variable");
-	_po_info.data_variable.Fill_Data(_datatrain,"po_variable");
+	_mc_info.Fill_Data(_datatrain,"mc");
+	_po_info.Fill_Data(_datatrain,"po");
 	return;
 
 }
