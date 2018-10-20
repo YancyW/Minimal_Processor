@@ -43,6 +43,8 @@ using namespace lcio ;
 using namespace marlin ;
 using namespace std;
 using ToolSet::operator<<;
+using ToolSet::operator+;
+using ToolSet::operator-;
 
 class Minimal_Processor : public Processor {
 
@@ -60,12 +62,12 @@ class Minimal_Processor : public Processor {
 
 	protected:
 
-		// input 
-		std::string _inputPOsCollection;
+		// input string 
+		std::string _inputPFOsCollection;
 		std::string _inputMCsCollection;
 
-		std::string _mcpoRelation;
-		std::string _pomcRelation;
+		std::string _mcpfoRelation;
+		std::string _pfomcRelation;
 		std::string _mctrkRelation;
 		std::string _trkmcRelation;
 
@@ -74,38 +76,44 @@ class Minimal_Processor : public Processor {
 		bool _output_switch_root;
 		bool _output_switch_collection;
 
-		// parameter 
-		LCCollection* _poCol;
+		std::string _outputPFOCollection;
+
+
+		// input collection 
+		LCCollection* _pfoCol;
 		LCCollection* _mcCol;
-		LCRelationNavigator* _navpomc;
-		LCRelationNavigator* _navmcpo;
+		LCRelationNavigator* _navpfomc;
+		LCRelationNavigator* _navmcpfo;
 		LCRelationNavigator* _navtrkmc;
 		LCRelationNavigator* _navmctrk;
 
-		int  _nEvt; 
-		int _nRun;
-
 		// output 
-		TFile* _otfile;
+		TFile* _outfile;
 		TTree* _datatrain;
-
+		LCCollectionVec* _outPFOCol;
 
 		//function
+		void  Init  (LCEvent* evt); 
+		void  Finish(LCEvent* evt);
 
 		/** Calculates the cone energy */
 		bool analyseMCParticle( LCCollection* MCs_col, LCRelationNavigator* navMCToPFO, Minimal_Processor_Information &info, Minimal_Processor_Counter& counter);
-		bool analysePOParticle( LCCollection* POs_col, LCRelationNavigator* navPFOToMC, Minimal_Processor_Information &info, Minimal_Processor_Counter& counter);
+		bool analysePFOParticle( LCCollection* PFOs_col, LCRelationNavigator* navPFOToMC, Minimal_Processor_Information &info, Minimal_Processor_Counter& counter);
 
 
 		void makeNTuple();
 
-	public:
+
+		//para for recording information
+		int  _nEvt; 
+		int _nRun;
+
 		Minimal_Processor_Counter              _mc_counter;
-		Minimal_Processor_Counter              _po_counter;
+		Minimal_Processor_Counter              _pfo_counter;
 		Minimal_Processor_Global_Counter       _global_counter;
 
 		Minimal_Processor_Information          _mc_info;
-		Minimal_Processor_Information          _po_info;
+		Minimal_Processor_Information          _pfo_info;
 
 } ;
 

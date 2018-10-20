@@ -14,7 +14,7 @@ void Minimal_Processor_Variable::Get_MCParticle_Information( MCParticle* input) 
 	return ;
 }
 
-void Minimal_Processor_Variable::Get_POParticle_Information( ReconstructedParticle* input) {
+void Minimal_Processor_Variable::Get_PFOParticle_Information( ReconstructedParticle* input) {
 	pdg      =input->getType();
 	p        =ToolSet::CMC::Cal_P(input);
 	pt       =ToolSet::CMC::Cal_PT(input);
@@ -39,7 +39,7 @@ void Minimal_Processor_Variable_Vec::Get_MCParticles_Information( std::vector<MC
 }
 
 
-void Minimal_Processor_Variable_Vec::Get_POParticles_Information( std::vector<ReconstructedParticle*> input) {
+void Minimal_Processor_Variable_Vec::Get_PFOParticles_Information( std::vector<ReconstructedParticle*> input) {
 	// energy
 	for(unsigned int i=0;i<input.size();i++){
 		pdg      .push_back(input[i]->getType());

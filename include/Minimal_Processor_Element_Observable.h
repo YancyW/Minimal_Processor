@@ -20,18 +20,18 @@ class Minimal_Processor_Global_Counter{
 		//***********
 		float evt         ;
 		float pass_mc     ;
-		float pass_po     ;
+		float pass_pfo    ;
 		float pass_all    ;
 
 		void Init(){
 			evt           =0;
 			pass_all      =0;
 			pass_mc       =0;
-			pass_po       =0;
+			pass_pfo      =0;
 		}
 
 		void Print(){
-			std::cout << "in the Global counter, there are " << pass_mc << " pass MC, and " << pass_po << " pass PO, and " <<pass_all << " pass all criterion." << std::endl; 
+			std::cout << "in the Global counter, there are " << pass_mc << " pass MC, and " << pass_pfo << " pass PFO, and " <<pass_all << " pass all criterion." << std::endl; 
 		}
 };
 
@@ -89,7 +89,7 @@ class Minimal_Processor_Variable{
 		}
 
 		void Get_MCParticle_Information( MCParticle* input) ;
-		void Get_POParticle_Information( ReconstructedParticle* input) ;
+		void Get_PFOParticle_Information( ReconstructedParticle* input) ;
 		void Fill_Data(TTree* tree, std::string prefix);
 };
 
@@ -117,7 +117,7 @@ class Minimal_Processor_Variable_Vec{
 		}
 
 		void Get_MCParticles_Information( std::vector<MCParticle*> input) ;
-		void Get_POParticles_Information( std::vector<ReconstructedParticle*> input) ;
+		void Get_PFOParticles_Information( std::vector<ReconstructedParticle*> input) ;
 		void Fill_Data(TTree* tree, std::string prefix);
 };
 
