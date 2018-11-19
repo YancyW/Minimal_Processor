@@ -22,13 +22,13 @@ Minimal_Processor::Minimal_Processor()
 				std::string("PandoraPFOs"));
 
 	    registerInputCollection( LCIO::LCRELATION,
-	    		"InputRecoMCTruthLink",
+	    		"InputMCRecoTruthLink",
 	    		"Relation between MC and PFO particles",
 	    		_mcpfoRelation,
 	    		std::string("MCTruthRecoLink"));
 
 	    registerInputCollection( LCIO::LCRELATION,
-	    		"InputMCRecoTruthLink",
+	    		"InputRecoMCTruthLink",
 	    		"Relation between MC and PFO particles",
 	    		_pfomcRelation,
 	    		std::string("RecoMCTruthLink"));

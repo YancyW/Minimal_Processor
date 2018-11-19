@@ -7,7 +7,7 @@ bool Minimal_Processor::analysePFOParticle(LCCollection* PFOs_col, LCRelationNav
 	std::vector<ReconstructedParticle*> pfo = ToolSet::CRC::Get_POParticle(PFOs_col);
 
 	std::vector<std::vector<MCParticle*> > origin_source;
-	ToolSet::CRC::Get_MC_From_PFO_Vec(pfo,origin_source, navPFOToMC);
+	origin_source= ToolSet::CRC::Get_MC_From_PFO_Vec(pfo,navPFOToMC);
 
 	info.data_variable_vec.Get_PFOParticles_Information( pfo);
 
